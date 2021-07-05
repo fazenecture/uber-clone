@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +9,7 @@ import 'package:uber_clone/main.dart';
 import 'package:uber_clone/screens/main_screen.dart';
 import 'package:uber_clone/screens/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uber_clone/widgets/progressDialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -22,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController passwordTextEditingController = TextEditingController();
   TextEditingController emailTextEditingController = TextEditingController();
+  // bool showSpinner = false;
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(34)),
               onPressed: () async {
+
                 try {
                   final user = await _firebaseAuth.signInWithEmailAndPassword(
                       email: emailTextEditingController.text,
@@ -141,7 +146,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   // print(pUser.email);
 
                   if (user != null) {
-
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return ProgressDialog();
+                      },
+                    );
                     Navigator.pushNamedAndRemoveUntil(
                         context, MainScreen.id, (route) => false);
                     Fluttertoast.showToast(msg: 'Login Succesful');
