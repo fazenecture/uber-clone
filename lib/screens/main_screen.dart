@@ -149,6 +149,7 @@ class _MainScreenState extends State<MainScreen> {
             mapType: MapType.normal,
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
+            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.5),
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
               newGoogleMapController = controller;
