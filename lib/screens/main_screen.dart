@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uber_clone/widgets/drawer_button.dart';
+import 'package:geolocator/geolocator.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -14,6 +16,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   late GoogleMapController newGoogleMapController;
 
@@ -24,6 +27,35 @@ class _MainScreenState extends State<MainScreen> {
     zoom: 14.4746,
   );
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   locatePosition();
+  // }
+
+  late double laitutde;
+  late double longitude;
+
+  void locatePosition () async{
+
+    try{
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      laitutde = position.latitude;
+      longitude = position.longitude;
+
+      LatLng latLaPosition = LatLng(position.latitude, position.longitude);
+      
+      CameraPosition cameraPosition = new CameraPosition(target: latLaPosition, zoom: 14);
+      newGoogleMapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      
+      print(longitude);
+      print(laitutde);
+    }
+    catch(e){
+      print(e);
+      print('kuch problem h');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +152,7 @@ class _MainScreenState extends State<MainScreen> {
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
               newGoogleMapController = controller;
+              locatePosition();
             },
           ),
           Positioned(
